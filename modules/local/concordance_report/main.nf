@@ -58,7 +58,7 @@ process CONCORDANCE_REPORT {
         --second-degree-min-relatedness ${params.second_degree_min_relatedness} \\
         --contamination-warn ${params.contamination_warn} \\
         --contamination-fail ${params.contamination_fail} \\
-        ${params.fail_on_discordance ? '--fail-on-discordance' : ''} \\
+        ${params.fail_on_discordance.toString().toBoolean() ? '--fail-on-discordance' : ''} \\
         ${args} \\
         --outdir .
     """

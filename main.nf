@@ -92,11 +92,11 @@ def helpMessage() {
 workflow {
     if ( params.help ) {
         helpMessage()
-        return
     }
-    if ( params.version ) {
+    else if ( params.version ) {
         log.info "${workflow.manifest.name} ${workflow.manifest.version}"
-        return
     }
-    CONCORDANCE()
+    else {
+        CONCORDANCE()
+    }
 }

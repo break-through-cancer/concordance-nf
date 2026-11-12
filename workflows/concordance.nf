@@ -33,7 +33,7 @@ workflow CONCORDANCE {
     def sites_path = params.sites ?: genome_cfg.sites
     def fai_path   = params.fai   ?: "${params.fasta}.fai"
 
-    if ( params.run_ancestry && !params.ancestry_labels ) {
+    if ( params.run_ancestry.toString().toBoolean() && !params.ancestry_labels ) {
         error "--run_ancestry needs --ancestry_labels (and --ancestry_labelled_dir)."
     }
 
@@ -74,7 +74,7 @@ workflow CONCORDANCE {
     // ---- contamination ----------------------------------------------------
     SOMALIER_CONTAMINATION (
         ch_all_sketches
-            .filter { params.run_contamination }
+            .filter { params.run_contamination.toString().toBoolean() }
             .map { sketches -> [ [id: 'cohort'], sketches ] },
         ch_sites
     )
@@ -89,7 +89,7 @@ workflow CONCORDANCE {
 
     SOMALIER_ANCESTRY (
         ch_all_sketches
-            .filter { params.run_ancestry }
+            .filter { params.run_ancestry.toString().toBoolean() }
             .map { sketches -> [ [id: 'cohort'], sketches ] },
         ch_labelled.map { labelled ->
             [ [id: 'labels'], params.ancestry_labels ? file(params.ancestry_labels, checkIfExists: true) : [], labelled ]
@@ -122,7 +122,7 @@ workflow CONCORDANCE {
 
     MULTIQC (
         ch_multiqc_files
-            .filter { !params.skip_multiqc }
+            .filter { !params.skip_multiqc.toString().toBoolean() }
             .map { files -> [ [id: 'concordance'], files, ch_multiqc_config, [], [], [] ] }
     )
 
