@@ -54,6 +54,7 @@ PAIRS = [
     ("S1", "R1", 0.988, 5,    N),      # REGISTRY_MATCH (R1 not in the samplesheet)
     ("S2", "S4", 0.006, 1890, N),
     ("S5", "S9", 0.002, 1955, N),
+    ("R1", "R2", 0.990, 4,    N),      # registry-only pair, must be skipped
 ]
 
 # sample -> (somalier_sex_code, gt_depth, n_hom_ref, n_het, n_hom_alt, charr,
@@ -69,6 +70,7 @@ SAMPLES = {
     "S8": ("1", 25.0, 9060, 5440, 2500, 0.002, 516,   5,  41, 14.0),
     "S9": ("1", 30.0, 9030, 5465, 2505, 0.071, 513,   6,  41, 14.3),   # contaminated
     "R1": ("2", 33.0, 9005, 5495, 2500, 0.001, 301, 139, 119, 0.1),    # registry sketch
+    "R2": ("2", 31.0, 9002, 5498, 2500, 0.001, 303, 137, 120, 0.1),    # registry sketch
     # a declared sample with far too few sites -> per-sample FAIL
     "S10": ("2", 2.0,   200,   90,   40, 0.001,  10,   4,   3, 0.05),
 }
@@ -167,6 +169,10 @@ def main():
         if ("S2", "S4") in got and got[("S2", "S4")] == "NOT_REPORTED":
             failures.append("NOT_REPORTED rows should be filtered out")
 
+        # pairs with no declared member must be skipped, not re-flagged every run
+        if ("R1", "R2") in got:
+            failures.append("registry-only pair R1/R2 should be skipped")
+
         # ---- sample verdicts ----
         sample_status, sample_notes = {}, {}
         with open(os.path.join(out, "concordance.samples.tsv")) as fh:
@@ -204,6 +210,8 @@ def main():
             failures.append("summary n_fail too low: %s" % summary["n_fail"])
         if summary["verdict_counts"].get("SAMPLE_SWAP") != 1:
             failures.append("summary should record exactly one SAMPLE_SWAP")
+        if summary["n_pairs_registry_only_skipped"] != 1:
+            failures.append("summary should record one skipped registry-only pair")
 
         html = open(os.path.join(out, "concordance_report.html")).read()
         for needle in ("<title>", "Relatedness matrix", "SAMPLE_SWAP", "</html>"):

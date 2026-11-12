@@ -360,6 +360,8 @@ def build_pair_table(pair_rows, declared, t):
         b = pick(row, "sample_b")
         if not a or not b:
             continue
+        if a not in declared and b not in declared:
+            continue
 
         relatedness = as_float(pick(row, "relatedness"))
         ibs0        = as_int(pick(row, "ibs0"))
@@ -741,6 +743,11 @@ def main(argv=None):
     seen = {s["sample_id"] for s in samples}
     missing = sorted(set(declared.keys()) - seen)
 
+    n_registry_only = sum(1 for r in pair_rows
+                          if pick(r, "sample_a") and pick(r, "sample_b")
+                          and pick(r, "sample_a") not in declared
+                          and pick(r, "sample_b") not in declared)
+
     summary = {
         "run_name":            args.run_name,
         "generated_utc":       datetime.now(timezone.utc).isoformat(),
@@ -749,6 +756,7 @@ def main(argv=None):
         "n_samples_registry":  sum(1 for s in samples if s["in_samplesheet"] != "yes"),
         "n_pairs_total":       len(all_pairs),
         "n_pairs_evaluated":   len(pairs),
+        "n_pairs_registry_only_skipped": n_registry_only,
         "n_pass":              n_pass,
         "n_warn":              n_warn,
         "n_fail":              n_fail,
