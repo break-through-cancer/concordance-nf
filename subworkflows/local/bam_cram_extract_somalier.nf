@@ -18,7 +18,7 @@
 
 include { SAMTOOLS_INDEX    } from '../../modules/nf-core/samtools/index/main'
 include { HTSLIB_BGZIPTABIX } from '../../modules/nf-core/htslib/bgziptabix/main'
-include { SOMALIER_EXTRACT  } from '../../modules/nf-core/somalier/extract/main'
+include { SOMALIER_EXTRACT  } from '../../modules/local/somalier_extract/main'
 
 workflow BAM_CRAM_EXTRACT_SOMALIER {
     take:
@@ -65,7 +65,18 @@ workflow BAM_CRAM_EXTRACT_SOMALIER {
 
     SOMALIER_EXTRACT ( ch_for_extract, ch_fasta, ch_fai, ch_sites )
 
+    ch_sketches = SOMALIER_EXTRACT.out.extract
+        .map { meta, sketches ->
+            def names = [ sketches ].flatten().collect { it.name.replaceFirst(/\.somalier$/, '') }
+            if ( names != [ meta.id ] ) {
+                error "Sample '${meta.id}': somalier wrote sketch(es) named ${names}. " +
+                      "The sketch name must equal the samplesheet 'sample' value. " +
+                      "For VCF input, the VCF sample column must match it and the file must hold one sample."
+            }
+            [ meta, sketches ]
+        }
+
     emit:
-    sketches = SOMALIER_EXTRACT.out.extract   // [ meta, *.somalier ]
+    sketches = ch_sketches   // [ meta, *.somalier ]
     staged   = ch_for_extract                 // [ meta, file, index ]
 }

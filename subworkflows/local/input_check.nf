@@ -71,6 +71,10 @@ workflow INPUT_CHECK {
                                         "use the sample id itself if every row is a distinct individual."
             if ( !row.alignment ) error "Samplesheet row '${row.sample}' is missing an 'alignment' value."
 
+            if ( !(row.sample ==~ /[A-Za-z0-9._-]+/) ) {
+                error "Samplesheet row '${row.sample}': sample ids may contain only letters, digits, '.', '_' and '-'."
+            }
+
             def input_file = resolve_path(row.alignment as String, sheet_dir)
             def filetype   = classify(input_file.name)
             if ( !filetype ) {
