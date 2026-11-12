@@ -1,7 +1,7 @@
 # Biocentric/concordance-nf
 
 [![GitHub Actions CI Status](https://github.com/Biocentric/concordance-nf/actions/workflows/ci.yml/badge.svg)](https://github.com/Biocentric/concordance-nf/actions/workflows/ci.yml)
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A525.04.0-23aa62.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A526.10.5-23aa62.svg)](https://www.nextflow.io/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
@@ -26,6 +26,15 @@ checks.
 > This pipeline follows nf-core conventions and is built from
 > [nf-core/modules](https://github.com/nf-core/modules), but it is not an
 > official nf-core pipeline.
+
+> [!IMPORTANT]
+> This repository is a fork of
+> [Biocentric/concordance-nf](https://github.com/Biocentric/concordance-nf).
+> It fixes sketch naming for BAM and CRAM input, skips registry-only pairs,
+> corrects boolean parameter handling, and targets Nextflow 26.10.5. See the
+> [changelog](CHANGELOG.md). The badges and `nextflow run` commands in these
+> docs still use the upstream name; substitute this repository's path to run
+> the fork.
 
 1. Validate the samplesheet and classify each input ([`splitCsv`](https://www.nextflow.io/docs/latest/operator.html#splitcsv))
 2. Index alignments that arrive without one ([`samtools index`](https://www.htslib.org/doc/samtools-index.html)), compress and index VCFs that need it ([`bgzip`/`tabix`](https://www.htslib.org/doc/tabix.html))
@@ -97,7 +106,7 @@ WGS_2024_0119,PATIENT03,FAM03,/data/PATIENT03_wgs.cram,,male,plate3
 
 | Column | Required | Meaning |
 | --- | --- | --- |
-| `sample` | yes | Unique library or run identifier |
+| `sample` | yes | Unique library or run identifier. It names the sketch, so it need not match the read group `SM` tag. Letters, digits, `.`, `_` and `-` only |
 | `subject` | yes | **The expectation being tested.** Rows sharing a subject must come back genotypically identical; rows with different subjects must not |
 | `alignment` | yes | BAM, CRAM, SAM, VCF, BCF or GVCF |
 | `index` | no | Generated on the fly when omitted (required for BCF) |
@@ -243,7 +252,8 @@ Regenerate the committed fixture with
 
 ## Credits
 
-Biocentric/concordance-nf was written by Biocentric.
+Biocentric/concordance-nf was written by Biocentric. This fork builds on that
+work under the same licence.
 
 All relatedness, IBS0, sex and contamination estimation is the work of
 [somalier](https://github.com/brentp/somalier) by Brent Pedersen and Aaron

@@ -2,12 +2,13 @@
 
 ## Requirements
 
-Nextflow **≥ 25.04.0** and one of Docker, Singularity/Apptainer or Conda. No
+Nextflow **≥ 26.10.5** and one of Docker, Singularity/Apptainer or Conda. No
 somalier installation needed — the container is pinned by the pipeline.
 
-25.04.0 is a hard floor. The nf-core `htslib/bgziptabix` module vendored here
-uses process-scope variables that the Nextflow parser in 24.10 and earlier
-rejects at compile time. Verified by bisection: 24.10.5 fails, 25.04.0 passes.
+26.10.5 is the version this fork is tested on. Earlier releases may work, but
+they are not tested. The vendored nf-core `htslib/bgziptabix` module needs
+25.04.0 or later, because the parser in 24.10 and earlier rejects its
+process-scope variables.
 
 ## Typical invocations
 
@@ -35,6 +36,20 @@ Ensembl-style contig names (`1`, not `chr1`):
 nextflow run Biocentric/concordance-nf -profile docker --input samplesheet.csv --fasta /ref/GRCh38.fa --genome GRCh38_nochr --outdir results
 ```
 
+## Sample Naming
+
+The `sample` column names each sketch. For BAM and CRAM input the pipeline sets
+`SOMALIER_SAMPLE_NAME` to that value, so the read group `SM` tag is ignored.
+Several files may share one `SM` tag, as germline and tumor files often do,
+without colliding.
+
+VCF input cannot be renamed this way, because somalier takes the name from the
+VCF sample column. The VCF must hold one sample, and that column must equal the
+`sample` value. The pipeline stops with an error when a sketch name differs from
+the `sample` value.
+
+Sample ids may contain only letters, digits, `.`, `_` and `-`.
+
 ## Building a registry
 
 Point `--registry` at a directory and publish each run's sketches into it:
@@ -47,7 +62,11 @@ The sketches are build-comparable (somalier ≥ 0.2.16), so a registry can mix
 GRCh37, GRCh38 and CHM13 extractions. The one exception is `GRCh38_rna`, which
 uses different coordinates — keep RNA sketches in a separate registry.
 
-Set `--publish_sketches false` if you do not want them in the output directory.
+Set `--publish_sketches=false` if you do not want them in the output directory.
+
+Pairs in which neither sample is in the samplesheet are skipped, so duplicates
+already archived in the registry do not warn on every run. The summary JSON
+reports the count as `n_pairs_registry_only_skipped`.
 
 ## Thresholds
 
@@ -84,10 +103,11 @@ low-level kinship to its contaminant. `--run_contamination` is on by default for
 exactly this reason: the pairwise estimate is directional, so it distinguishes
 contamination from a real pedigree relationship.
 
-**Profile params beat CLI params.** Nextflow applies `params` from a
-`-profile` config over `--param` on the command line. `-profile test` sets its
-own thresholds; override them by editing `conf/test.config` or by not using that
-profile.
+**Command-line params beat profile params.** On Nextflow 26.10.5 a `--param`
+on the command line overrides the same `params` entry set by a `-profile`
+config. `-profile test` sets its own thresholds, which you can override the same
+way. Write boolean flags as `--flag=false`; the pipeline coerces the string to a
+boolean.
 
 ## Environments where the project directory is not on ordinary local disk
 
