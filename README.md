@@ -32,8 +32,8 @@ checks.
 > [Biocentric/concordance-nf](https://github.com/Biocentric/concordance-nf).
 > It fixes sketch naming for BAM and CRAM input, skips registry-only pairs,
 > corrects boolean parameter handling, and targets Nextflow 26.10.5. See the
-> [changelog](CHANGELOG.md). The repository is private, so `nextflow run`
-> requires GitHub credentials in your Nextflow SCM configuration.
+> [changelog](CHANGELOG.md). Development happens on `btc-main`; run it with
+> `-r btc-main`. `main` mirrors upstream and receives no commits of our own.
 
 1. Validate the samplesheet and classify each input ([`splitCsv`](https://www.nextflow.io/docs/latest/operator.html#splitcsv))
 2. Index alignments that arrive without one ([`samtools index`](https://www.htslib.org/doc/samtools-index.html)), compress and index VCFs that need it ([`bgzip`/`tabix`](https://www.htslib.org/doc/tabix.html))

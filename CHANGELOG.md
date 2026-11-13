@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Development moves to `btc-main`. `main` mirrors upstream, and CI runs on
+  pushes to `btc-main`.
 - Repository paths, badges, run commands and manifest `name` and `homePage` now
   point at `break-through-cancer/concordance-nf`. The manifest `author` still
   credits the upstream authors.
