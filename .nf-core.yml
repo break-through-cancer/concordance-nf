@@ -1,6 +1,6 @@
 repository_type: pipeline
 nf_core_version: 4.1.0
-org_path: Biocentric
+org_path: break-through-cancer
 lint:
   files_exist: false
   files_unchanged: false

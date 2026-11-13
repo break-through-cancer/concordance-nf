@@ -15,25 +15,25 @@ process-scope variables.
 Routine batch QC:
 
 ```bash
-nextflow run Biocentric/concordance-nf -profile docker --input samplesheet.csv --fasta /ref/GRCh38.fa --outdir results
+nextflow run break-through-cancer/concordance-nf -profile docker --input samplesheet.csv --fasta /ref/GRCh38.fa --outdir results
 ```
 
 Against archived history — the mode this pipeline is really for:
 
 ```bash
-nextflow run Biocentric/concordance-nf -profile docker --input new_batch.csv --fasta /ref/GRCh38.fa --registry /archive/somalier-sketches --outdir results
+nextflow run break-through-cancer/concordance-nf -profile docker --input new_batch.csv --fasta /ref/GRCh38.fa --registry /archive/somalier-sketches --outdir results
 ```
 
 As a CI gate:
 
 ```bash
-nextflow run Biocentric/concordance-nf -profile docker --input samplesheet.csv --fasta /ref/GRCh38.fa --fail_on_discordance --outdir results
+nextflow run break-through-cancer/concordance-nf -profile docker --input samplesheet.csv --fasta /ref/GRCh38.fa --fail_on_discordance --outdir results
 ```
 
 Ensembl-style contig names (`1`, not `chr1`):
 
 ```bash
-nextflow run Biocentric/concordance-nf -profile docker --input samplesheet.csv --fasta /ref/GRCh38.fa --genome GRCh38_nochr --outdir results
+nextflow run break-through-cancer/concordance-nf -profile docker --input samplesheet.csv --fasta /ref/GRCh38.fa --genome GRCh38_nochr --outdir results
 ```
 
 ## Sample Naming

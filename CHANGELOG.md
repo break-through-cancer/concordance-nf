@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Repository paths, badges, run commands and manifest `name` and `homePage` now
+  point at `break-through-cancer/concordance-nf`. The manifest `author` still
+  credits the upstream authors.
 - Minimum Nextflow version raised to 26.10.5, the version the fork is tested on.
 - `main.nf` no longer uses `return` in the workflow body, which the Nextflow
   26.x parser rejects.

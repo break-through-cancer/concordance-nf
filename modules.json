@@ -1,6 +1,6 @@
 {
-    "name": "Biocentric/concordance-nf",
-    "homePage": "https://github.com/Biocentric/concordance-nf",
+    "name": "break-through-cancer/concordance-nf",
+    "homePage": "https://github.com/break-through-cancer/concordance-nf",
     "repos": {
         "https://github.com/nf-core/modules.git": {
             "modules": {

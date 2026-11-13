@@ -1,8 +1,8 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Biocentric/concordance-nf
-    https://github.com/Biocentric/concordance-nf
+    break-through-cancer/concordance-nf
+    https://github.com/break-through-cancer/concordance-nf
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SNP concordance / sample-identity QC for WGS, WES and targeted data.
 
@@ -25,7 +25,7 @@ def helpMessage() {
     concordance-nf - SNP concordance and sample-identity QC (somalier)
 
     Usage:
-        nextflow run Biocentric/concordance-nf -profile docker \\
+        nextflow run break-through-cancer/concordance-nf -profile docker \\
             --input samplesheet.csv \\
             --fasta /ref/GRCh38.fa \\
             --genome GRCh38 \\

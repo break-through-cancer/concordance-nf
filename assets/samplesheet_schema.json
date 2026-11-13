@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/Biocentric/concordance-nf/main/assets/samplesheet_schema.json",
+    "$id": "https://raw.githubusercontent.com/break-through-cancer/concordance-nf/main/assets/samplesheet_schema.json",
     "title": "concordance-nf samplesheet schema",
     "description": "One row per sequenced library. `subject` carries the identity expectation the pipeline tests: rows sharing a subject must come back identical, rows with different subjects must not.",
     "type": "array",

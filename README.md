@@ -1,6 +1,6 @@
-# Biocentric/concordance-nf
+# break-through-cancer/concordance-nf
 
-[![GitHub Actions CI Status](https://github.com/Biocentric/concordance-nf/actions/workflows/ci.yml/badge.svg)](https://github.com/Biocentric/concordance-nf/actions/workflows/ci.yml)
+[![GitHub Actions CI Status](https://github.com/break-through-cancer/concordance-nf/actions/workflows/ci.yml/badge.svg)](https://github.com/break-through-cancer/concordance-nf/actions/workflows/ci.yml)
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A526.10.5-23aa62.svg)](https://www.nextflow.io/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -10,7 +10,7 @@
 
 ## Introduction
 
-**Biocentric/concordance-nf** is a bioinformatics pipeline for SNP concordance
+**break-through-cancer/concordance-nf** is a bioinformatics pipeline for SNP concordance
 and sample-identity QC on WGS, WES and targeted sequencing data. It answers one
 question for every pair of samples: **are these the same individual, and is that
 what you expected?**
@@ -32,9 +32,8 @@ checks.
 > [Biocentric/concordance-nf](https://github.com/Biocentric/concordance-nf).
 > It fixes sketch naming for BAM and CRAM input, skips registry-only pairs,
 > corrects boolean parameter handling, and targets Nextflow 26.10.5. See the
-> [changelog](CHANGELOG.md). The badges and `nextflow run` commands in these
-> docs still use the upstream name; substitute this repository's path to run
-> the fork.
+> [changelog](CHANGELOG.md). The repository is private, so `nextflow run`
+> requires GitHub credentials in your Nextflow SCM configuration.
 
 1. Validate the samplesheet and classify each input ([`splitCsv`](https://www.nextflow.io/docs/latest/operator.html#splitcsv))
 2. Index alignments that arrive without one ([`samtools index`](https://www.htslib.org/doc/samtools-index.html)), compress and index VCFs that need it ([`bgzip`/`tabix`](https://www.htslib.org/doc/tabix.html))
@@ -75,7 +74,7 @@ flowchart LR
 Run the bundled test — a real run, no stubbing, finishes in under a minute:
 
 ```bash
-nextflow run Biocentric/concordance-nf -profile test,docker --outdir results-test
+nextflow run break-through-cancer/concordance-nf -profile test,docker --outdir results-test
 ```
 
 It ships a synthetic 7-sample cohort with a deliberately broken identity
@@ -120,7 +119,7 @@ Full spec: [`assets/samplesheet_schema.json`](assets/samplesheet_schema.json).
 Now run the pipeline:
 
 ```bash
-nextflow run Biocentric/concordance-nf \
+nextflow run break-through-cancer/concordance-nf \
    -profile <docker/singularity/apptainer/conda> \
    --input samplesheet.csv \
    --fasta /ref/GRCh38.fa \
@@ -132,7 +131,7 @@ Compare against archived sketches as well as the current batch — the mode this
 pipeline is really for:
 
 ```bash
-nextflow run Biocentric/concordance-nf \
+nextflow run break-through-cancer/concordance-nf \
    -profile docker \
    --input new_batch.csv \
    --fasta /ref/GRCh38.fa \
