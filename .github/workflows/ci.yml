@@ -24,6 +24,9 @@ jobs:
           python-version: "3.12"
       # stdlib only, so no install step
       - run: python3 tests/test_report.py
+      - run: python3 tests/test_merge_sketches.py
+      - run: python3 .cirro/identity-qc/test_preprocess.py
+      - run: python3 .cirro/registry/test_preprocess.py
 
   pipeline:
     name: ${{ matrix.profile }} | Nextflow ${{ matrix.NXF_VER }}

@@ -1,0 +1,120 @@
+{
+  "form": {
+    "title": "Sample Identity QC",
+    "description": "Checks that each sample matches the subject it is declared under and finds samples from the same individual under different names. Sketches every alignment with somalier, compares all against all, and reports a verdict per pair.",
+    "type": "object",
+    "required": ["input", "genome", "fasta"],
+    "properties": {
+      "input": {
+        "title": "Samplesheet",
+        "description": "One row per sample. Rows that share a subject must come back identical; rows under different subjects must not. Use the sample id as the subject when every row is a distinct individual.",
+        "type": "string",
+        "schema": "pipeline_samplesheet"
+      },
+      "genome": {
+        "title": "Genome build",
+        "description": "Selects the somalier sites file. GRCh38 uses chr-prefixed contigs; pick GRCh38_nochr for Ensembl-style names. It must match the reference FASTA.",
+        "type": "string",
+        "enum": ["GRCh38", "GRCh38_nochr", "GRCh37", "hg19", "CHM13"],
+        "enumNames": ["GRCh38 (chr1)", "GRCh38 (1, no chr prefix)", "GRCh37", "hg19", "CHM13"],
+        "default": "GRCh38"
+      },
+      "fasta": {
+        "title": "Reference FASTA",
+        "description": "Needed to decode CRAM and to extract genotypes. The FASTA index must sit next to it as <name>.fai.",
+        "type": "string",
+        "format": "file-path",
+        "pattern": "\\.(fa|fasta|fna)(\\.gz)?$"
+      },
+      "registry": {
+        "title": "Sketch registry",
+        "description": "Optional. A registry dataset from the Sketch Registry process. Every sample is also compared against it, which is how a patient enrolled under another study is found. A registry sketch for a sample in this run is ignored.",
+        "type": "string",
+        "format": "directory-path",
+        "process": ["process-btc-sketch-registry-1-0"]
+      },
+      "run_contamination": {
+        "title": "Estimate contamination",
+        "description": "Pairwise contamination estimate. A contaminated sample shows spurious low-level relatedness to its contaminant, so this separates contamination from a real relative.",
+        "type": "boolean",
+        "default": true
+      },
+      "min_sites": {
+        "title": "Minimum usable sites",
+        "description": "Samples with fewer usable sites are not judged. Lower this for targeted panels.",
+        "type": "integer",
+        "minimum": 1,
+        "default": 1000
+      },
+      "min_depth": {
+        "title": "Minimum mean depth",
+        "description": "Samples below this genotype depth are flagged as low confidence. Hard-call relatedness is unreliable below about 5x.",
+        "type": "number",
+        "minimum": 1,
+        "default": 5
+      },
+      "fail_on_discordance": {
+        "title": "Fail the run on any discordance",
+        "description": "Finish with an error when any pair fails. Leave off to receive the full report either way.",
+        "type": "boolean",
+        "default": false
+      }
+    }
+  },
+  "ui": {},
+  "structuredInputs": {
+    "pipeline_samplesheet": {
+      "fileFormat": "CSV",
+      "defaultSourceFile": "samplesheet.csv",
+      "schema": {
+        "title": "Samplesheet",
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "properties": {
+            "sample": {
+              "type": "string",
+              "title": "Sample",
+              "pattern": "^[A-Za-z0-9._-]+$",
+              "errorMessage": "Use only letters, digits, dot, underscore and dash. The id must be unique in the sheet."
+            },
+            "subject": {
+              "type": "string",
+              "title": "Subject",
+              "pattern": "^[A-Za-z0-9._-]+$",
+              "errorMessage": "Use only letters, digits, dot, underscore and dash."
+            },
+            "alignment": {
+              "type": "string",
+              "format": "file-path",
+              "title": "BAM / CRAM",
+              "pattern": "\\.(bam|cram|vcf|vcf\\.gz|bcf|bcf\\.gz|gvcf|gvcf\\.gz|g\\.vcf|g\\.vcf\\.gz)$"
+            },
+            "index": {
+              "type": "string",
+              "format": "file-path",
+              "title": "Index (optional)",
+              "pattern": "\\.(bai|crai|csi|tbi)$"
+            },
+            "family": {
+              "type": "string",
+              "title": "Family (optional)",
+              "pattern": "^[A-Za-z0-9._-]*$"
+            },
+            "sex": {
+              "type": "string",
+              "title": "Sex (optional)",
+              "enum": ["male", "female", "unknown"]
+            },
+            "batch": {
+              "type": "string",
+              "title": "Batch (optional)"
+            }
+          },
+          "required": ["sample", "subject", "alignment"]
+        }
+      }
+    }
+  }
+}

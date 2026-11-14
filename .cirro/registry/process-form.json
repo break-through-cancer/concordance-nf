@@ -1,0 +1,34 @@
+{
+  "form": {
+    "title": "Sketch Registry",
+    "description": "Merges the sketches from Sample Identity QC runs into one registry dataset. Give that dataset to a later Sample Identity QC run, and every sample is compared against everything in it. Sketches fully identify an individual, so restrict access to the registry dataset as you would for genotype data.",
+    "type": "object",
+    "required": ["sketches"],
+    "properties": {
+      "sketches": {
+        "title": "Identity QC results to add",
+        "description": "Sample Identity QC datasets whose sketches go into the registry.",
+        "type": "string",
+        "format": "directory-path",
+        "multiple": true,
+        "process": ["process-btc-sample-identity-qc-1-0"]
+      },
+      "previous_registry": {
+        "title": "Registry to extend",
+        "description": "Optional. An earlier registry. The result holds its sketches plus the new ones, as a new dataset; the earlier one is not changed.",
+        "type": "string",
+        "format": "directory-path",
+        "process": ["process-btc-sketch-registry-1-0"]
+      },
+      "on_conflict": {
+        "title": "When a sample is already in the registry with different content",
+        "description": "The same sample id with a different sketch means the sample was re-sequenced, or an id was reused for another individual. Stopping lets you decide which; replacing keeps the new sketch. Identical sketches merge silently either way.",
+        "type": "string",
+        "enum": ["error", "replace"],
+        "enumNames": ["Stop the merge", "Replace with the new sketch"],
+        "default": "error"
+      }
+    }
+  },
+  "ui": {}
+}

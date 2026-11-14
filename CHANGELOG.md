@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Cirro configuration in `.cirro/`: a Sample Identity QC process whose
+  samplesheet is a structured input, and a Sketch Registry process that merges
+  the sketches of identity QC runs into one registry dataset. Each ships with an
+  offline preprocess test.
+- `main_registry.nf` and `MERGE_SKETCHES` build a registry from result
+  directories, optionally extending an earlier one. Identical sketches merge
+  silently; a sample id with differing content stops the merge unless
+  `--on_conflict replace` is given.
+- A registry sketch for a sample in the current run is skipped, so a registry
+  built from earlier runs no longer aborts the pipeline on an input file name
+  collision.
 - Development moves to `btc-main`. `main` mirrors upstream, and CI runs on
   pushes to `btc-main`.
 - Repository paths, badges, run commands and manifest `name` and `homePage` now

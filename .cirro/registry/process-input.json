@@ -1,0 +1,6 @@
+{
+  "outdir": "$.dataset.dataPath",
+  "sketches": "$.dataset.params.sketches",
+  "previous_registry": "$.dataset.params.previous_registry",
+  "on_conflict": "$.dataset.params.on_conflict"
+}

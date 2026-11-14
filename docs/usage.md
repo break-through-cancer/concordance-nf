@@ -68,6 +68,20 @@ Pairs in which neither sample is in the samplesheet are skipped, so duplicates
 already archived in the registry do not warn on every run. The summary JSON
 reports the count as `n_pairs_registry_only_skipped`.
 
+## Running on Cirro
+
+`.cirro/` holds two processes. Sample Identity QC takes the samplesheet as a
+table in the launch form. Sketch Registry merges the sketches of identity QC
+runs into one dataset, which a later identity QC run takes as its registry. See
+`.cirro/README.md` for the ids, the definition values, and the data-sharing
+caution.
+
+Outside Cirro, the same merge runs as:
+
+```bash
+nextflow run break-through-cancer/concordance-nf -main-script main_registry.nf -profile docker --sketch_dirs results_a,results_b --previous_registry /archive/somalier-sketches --outdir registry
+```
+
 ## Thresholds
 
 The defaults suit WGS at ≥ 15×. Adjust for other regimes:

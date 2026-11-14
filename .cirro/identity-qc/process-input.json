@@ -1,0 +1,11 @@
+{
+  "input": "$.structuredInputs.pipeline_samplesheet.path",
+  "outdir": "$.dataset.dataPath",
+  "genome": "$.dataset.params.genome",
+  "fasta": "$.dataset.params.fasta",
+  "registry": "$.dataset.params.registry",
+  "run_contamination": "$.dataset.params.run_contamination",
+  "min_sites": "$.dataset.params.min_sites",
+  "min_depth": "$.dataset.params.min_depth",
+  "fail_on_discordance": "$.dataset.params.fail_on_discordance"
+}
