@@ -52,8 +52,23 @@ workflow CONCORDANCE {
     // A sketch is ~200 KB and permanent. Comparing only within a batch is the
     // single biggest missed opportunity in routine identity QC: the swap you
     // care about is usually against a sample from three months ago.
+    // A registry built from earlier runs may already hold a sample that is in
+    // this run. The sketch extracted now wins; staging both would abort on the
+    // file name collision.
+    ch_current_ids = INPUT_CHECK.out.inputs
+        .map { meta, _file, _index -> meta.id }
+        .toList()
+        .map { ids -> [ ids ] }   // combine would otherwise spread the list
+
     ch_registry = params.registry
         ? Channel.fromPath("${params.registry}/**.somalier", checkIfExists: true)
+            .combine( ch_current_ids )
+            .filter { sketch, ids ->
+                def in_this_run = ids.contains( sketch.name.replaceFirst(/\.somalier$/, '') )
+                if ( in_this_run ) log.info "[concordance-nf] registry sketch ${sketch.name} skipped: the sample is in this run"
+                !in_this_run
+            }
+            .map { sketch, _ids -> sketch }
         : Channel.empty()
 
     ch_all_sketches = BAM_CRAM_EXTRACT_SOMALIER.out.sketches
